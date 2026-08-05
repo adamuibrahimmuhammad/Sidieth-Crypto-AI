@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sidieth Crypto AI</title>
+</head>
+<body>
+
+<h1>🤖 Sidieth Crypto AI</h1>
+
+<p>Welcome to your AI assistant.</p>
+
+<form id="chatForm">
+    <input
+        type="text"
+        id="message"
+        placeholder="Ask anything about crypto..."
+        style="width:300px;"
+    >
+
+    <button type="submit">
+        Send
+    </button>
+</form>
+
+<pre id="reply"></pre>
+
+<script>
+document.getElementById("chatForm").addEventListener("submit", async function(e){
+
+e.preventDefault();
+
+const message=document.getElementById("message").value;
+
+const res=await fetch("/chat",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+message
+})
+});
+
+const data=await res.json();
+
+document.getElementById("reply").innerText=data.reply;
+
+});
+</script>
+
+</body>
+</html>
