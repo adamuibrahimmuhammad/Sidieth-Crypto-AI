@@ -1,52 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sidieth Crypto AI</title>
 </head>
+
 <body>
 
-<h1>🤖 Sidieth Crypto AI</h1>
+    <h1>🤖 Sidieth Crypto AI</h1>
 
-<p>Welcome to your AI assistant.</p>
+    <p>Welcome to your AI assistant.</p>
 
-<form id="chatForm">
     <input
-        type="text"
         id="message"
+        type="text"
         placeholder="Ask anything about crypto..."
-        style="width:300px;"
     >
 
-    <button type="submit">
-        Send
-    </button>
-</form>
+    <button type="button" onclick="askAI()">Send</button>
 
-<pre id="reply"></pre>
+    <p id="status"></p>
+    <pre id="reply"></pre>
 
-<script>
-document.getElementById("chatForm").addEventListener("submit", async function(e){
+    <script>
+        async function askAI() {
 
-e.preventDefault();
+            const message = document.getElementById("message").value;
+            const status = document.getElementById("status");
+            const reply = document.getElementById("reply");
 
-const message=document.getElementById("message").value;
+            if (!message.trim()) {
+                status.innerText = "Please enter a question.";
+                return;
+            }
 
-const res=await fetch("/chat",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-message
-})
-});
+            status.innerText = "Thinking...";
+            reply.innerText = "";
 
-const data=await res.json();
+            try {
 
-document.getElementById("reply").innerText=data.reply;
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                });
 
-});
-</script>
+                const data = await response.json();
+
+                if (data.reply) {
+                    status.innerText = "Done";
+                    reply.innerText = data.reply;
+                } else {
+                    status.innerText = "Error";
+                    reply.innerText = JSON.stringify(data);
+                }
+
+            } catch (error) {
+
+                status.innerText = "Connection error";
+                reply.innerText = error.toString();
+
+            }
+        }
+    </script>
 
 </body>
 </html>
