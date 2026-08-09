@@ -5,7 +5,8 @@ import os
 app = Flask(__name__)
 
 client = OpenAI(
-    api_key=os.environ.get("OPENAI_API_KEY")
+    api_key=os.environ.get("OPENAI_API_KEY"),
+    base_url="https://co.agentrouter.org/v1"
 )
 
 @app.route("/")
@@ -18,7 +19,7 @@ def chat():
     message = data.get("message", "")
 
     response = client.chat.completions.create(
-        model="gpt-4.1-mini",
+        model="gpt-5.5",
         messages=[
             {"role": "system", "content": "You are Sidieth Crypto AI, a helpful crypto assistant."},
             {"role": "user", "content": message}
